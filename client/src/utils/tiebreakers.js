@@ -34,6 +34,64 @@
 // 11. Net TDs in All Games
 // 12. Coin Flip 
 
+const divisionTieBreaker2 = (teamsArr) => {
+    if (teamsArr.length = 2) {
+        // if the teams played each other
+            // if they played each other once, return the winner first
+            // if they played each other twice and one team swept, return the winner first
+            // if they played each other twice and one game was a tie, return the winner first
+            // otherwise, go to next step
+
+        // if they have different divisional records, return the better record first
+            // otherwise, go to next step
+
+        // find the opponents they both played and save the data from those games to a variable in case it's needed later
+        // determine each team's record in those games
+        // if they have different records in those games, return the better record first
+            // otherwise, go to next step
+
+        // if they have different conference records, return the better record first
+            // otherwise, go to next step
+
+        // for each team, find the opponent from every game they won
+        // add the records of all opponents
+        // if they have different combined records, return the better record first
+            // otherwise, go to next step
+        
+        // add the records of every opponent each team played that season
+        // if they have differenct combined records, return the better record first
+            // otherwise, go to next step
+
+        // calculate each team's ranking in points for and against in the conference
+        // add both rankings
+        // if the combined ranking numbers are different, return the smaller one first
+            // otherwise, go to next step
+        
+        // calculate each team's ranking in points for and against in the league
+        // add both rankings
+        // if the combined ranking numbers are different, return the smaller one first
+            // otherwise, go to next step
+
+        // using saved common games data, calculate net points scored for each team
+        // if their net points values are different, return the higher one first
+            // otherwise, go to next step
+
+        // skip net points and net TDs tie-breaker because the predictor doesn't track points
+        
+        // tie-breaker comes down to coin flip
+    };
+};
+
+const divisionTieBreaker3 = (teamsArr) => {
+    // tie-breaker logic
+
+    // if a team is eliminated to leave two, store eliminated team in new array and run divTieBreaker2
+    // after divTieBreaker2 runs, combine the arrays and return all teams in order
+};
+
+// ---------------------------------------------------------------------------------------------------
+
+
 // FOR THE WILDCARD
 
 // Two Teams
@@ -67,3 +125,14 @@
 // 10. Net Points in All Games
 // 11. Net TDs in All Games
 // 12. Coin Flip
+
+const wilcardTieBreaker2 = (teamsArr) => {
+    // tie-breaker logic
+};
+
+const wildcardTieBreaker3 = (teamsArr) => {
+    // tie-breaker logic
+
+    // if a team is eliminated to leave two, store eliminated team in new array and run divTieBreaker2
+    // after divTieBreaker2 runs, combine the arrays and return all teams in order
+};
