@@ -21,7 +21,8 @@
 //     opponents: [
 //         {
 //              _id: ...,
-//              name: ...
+//              name: ...,     // include divisional opponents twice,
+//              record: ...    // populate at least some data
 //         },
 //         ...
 //     ]
@@ -171,34 +172,33 @@ const divisionTieBreaker2 = (teamsArr, season) => {
         // otherwise, go to next step    
 
         // if they have different conference records, return the better record first
-            // otherwise, go to next step
+        if (teamsArr[0].confRecord !== teamsArr[1].confRecord) {
+            teamsArr.sort((a, b) => (a.confRecord > b.confRecord) ? -1 : 1);
+            return teamsArr;
+        };
+        // otherwise, go to next step
 
         // for each team, find the opponent from every game they won
         // add the records of all opponents
         // if they have different combined records, return the better record first
-            // otherwise, go to next step
+        // otherwise, go to next step
         
-        // add the records of every opponent each team played that season
+        // add the records of every opponent first team played that season
+        var teamZeroOppCombinedWinPct = 0;
+
+        for ( i=0; i<teamsArr[0].opponents; i++) {
+            // add each opponent and calculate combined win percentage
+        };
+        // add the records of every opponent second team played that season
+
         // if they have differenct combined records, return the better record first
-            // otherwise, go to next step
-
-        // calculate each team's ranking in points for and against in the conference
-        // add both rankings
-        // if the combined ranking numbers are different, return the smaller one first
-            // otherwise, go to next step
-        
-        // calculate each team's ranking in points for and against in the league
-        // add both rankings
-        // if the combined ranking numbers are different, return the smaller one first
-            // otherwise, go to next step
-
-        // using saved common games data, calculate net points scored for each team
-        // if their net points values are different, return the higher one first
-            // otherwise, go to next step
+        // otherwise, go to next step
 
         // skip combined points raknings, net points, and net TDs tie-breakers (#7-#12 in NFL tie-breakers list) since we don't record scores
         
-        // if tie not broken, return both teams in each slot
+        // if tie not broken, return array with TIE as first item
+        return [ "TIE", teamsArr[0], teamsArr[1] ];
+
     };
 };
 
