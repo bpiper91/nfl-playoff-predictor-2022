@@ -1,10 +1,30 @@
+// // compare function for win percentages
+// const compareWinPct = (a, b) => {
+//     if (a < b) {
+//         return -1;
+//     } else if (a > b) {
+//         return 1;
+//     } else {
+//         return 0;
+//     };
+// };
+
+
+
 // Expected ObjectmFormat
 
 // teamsArr = [ { Team }, { Team } ]
 
 // team = {
 //     name: 'DAL',
-//     _id: ...
+//     _id: ...,
+//     opponents: [
+//         {
+//              _id: ...,
+//              name: ...
+//         },
+//         ...
+//     ]
 //     games: [
 //         {
 //             _id: ...,
@@ -51,21 +71,104 @@
 // 11. Net TDs in All Games
 // 12. Coin Flip 
 
-const divisionTieBreaker2 = (teamsArr) => {
-    if (teamsArr.length = 2) {
+// BREAK TWO-TEAM TIE FOR DIVISION WINNER 
+// expects two arguments: 1. array of two team objects and 2. current season object
+const divisionTieBreaker2 = (teamsArr, season) => {
+    if (teamsArr.length === 2) {
+        // create an array of head-to-head games
+        const headToHeadGames = season.games.filter(game => 
+            game.homeTeam === teamsArr[0] && game.awayTeam === teamsArr[1] || 
+            game.homeTeam === teamsArr[1] && game.awayTeam === teamsArr[0] 
+        );
+
         // if the teams played each other
-            // if they played each other once, return the winner first
-            // if they played each other twice and one team swept, return the winner first
-            // if they played each other twice and one game was a tie, return the winner first
+        if (headToHeadGames) {
+            if (headToHeadGames.length === 1) {
+                // if they played each other once, return the winner first
+                const teamOne = teamsArr.filter(team => team._id === headToHeadGames[0].winner);
+                const teamTwo = teamsArr.filter(team => team._id !== headToHeadGames[0].winner);
+
+                return teamOne.concat(teamTwo);
+            } else if (headToHeadGames.length === 2) {
+                // if they played each other twice and one team swept, return the winner first
+                if (headToHeadGames[0].winner === headToHeadGames[1].winner) {
+                    const teamOne = teamsArr.filter(team => team._id === headToHeadGames[0].winner);
+                    const teamTwo = teamsArr.filter(team => team._id !== headToHeadGames[0].winner);
+
+                    return teamOne.concat(teamTwo);
+                };
+
+                // if they played each other twice and one game was a tie, return the winner first
+                if (headToHeadGames[0].tie && !headToHeadGames[1].tie || !headToHeadGames[0].tie && headToHeadGames[1].tie) {
+                    const tiebreakerGame = headToHeadGames.filter(game => game.tie === false);
+
+                    const teamOne = teamsArr.filter(team => team._id === tiebreakerGame.winner);
+                    const teamTwo = teamsArr.filter(team => team._id !== tiebreakerGame.winner);
+
+                    return teamOne.concat(teamTwo);
+                };
+            };
             // otherwise, go to next step
+        };
 
         // if they have different divisional records, return the better record first
-            // otherwise, go to next step
+        if (teamsArr[0].divRecord !== teamsArr[1].divRecord) {
+            teamsArr.sort((a, b) => (a.divRecord > b.divRecord) ? -1 : 1);
+            return teamsArr;
+        };
+        // otherwise, go to next step
 
         // find the opponents they both played and save the data from those games to a variable in case it's needed later
-        // determine each team's record in those games
+        var commonOpponents = [];
+
+        for ( i=0; i<teamsArr[0].opponents.length; i++ ) {
+            if (teamsArr[1].opponents.find(opponent => opponent === teamsArr[0].opponents[i])) {
+                if (!commonOpponents.find(teamsArr[0].opponents[i])) {
+                    commonOpponents.push(teamsArr[0].opponents[i]);
+                };
+            };
+        };
+
+        // determine first team's record in those games
+        var teamZeroCommonGames = [];
+
+        for ( i=0; i<commonOpponents; i++ ) {
+            const games = season.games.filter(game => 
+                game.homeTeam === teamsArr[0]._id && game.awayTeam === commonOpponents[i] ||
+                game.awayTeam === teamsArr[0]._id && game.homeTeam === commonOpponents[i]
+            );
+
+            teamZeroCommonGames.push(games);
+        };
+
+        const teamZeroTies = teamZeroCommonGames.filter(game => game.tie === true);
+        const teamZeroWins = teamZeroCommonGames.filter(game => game.winner === teamsArr[0]._id);
+        const teamZeroWinPct = teamZeroWins.length / ( teamZeroCommonGames.length - teamZeroTies.length );
+
+        // determine second team's record in those games
+        var teamOneCommonGames = [];
+
+        for ( i=0; i<commonOpponents; i++ ) {
+            const games = season.games.filter(game => 
+                game.homeTeam === teamsArr[1]._id && game.awayTeam === commonOpponents[i] ||
+                game.awayTeam === teamsArr[1]._id && game.homeTeam === commonOpponents[i]
+            );
+
+            teamOneCommonGames.push(games);
+        };
+
+        const teamOneTies = teamOneCommonGames.filter(game => game.tie === true);
+        const teamOneWins = teamOneCommonGames.filter(game => game.winner === teamsArr[1]._id);
+        const teamOneWinPct = teamOneWins.length / ( teamOneCommonGames.length - teamOneTies.length );
+
         // if they have different records in those games, return the better record first
-            // otherwise, go to next step
+        if (teamZeroWinPct > teamOneWinPct) {
+            return teamsArr;
+        } else if (teamZeroWinPct < teamOneWinPct) {
+            const arr = [ teamsArr[1], teamsArr[0] ];
+            return arr;
+        }
+        // otherwise, go to next step    
 
         // if they have different conference records, return the better record first
             // otherwise, go to next step

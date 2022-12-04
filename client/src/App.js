@@ -7,7 +7,6 @@ function App() {
       <main>
         <Standings />
         <PlayoffPicture />
-        <SingleWeek week="13" />
         <SingleWeek week="14" />
         <SingleWeek week="15" />
         <SingleWeek week="16" />
